@@ -1,0 +1,7 @@
+*~
+*.o
+*.hi
+result
+dist*
+lib/
+a.out
