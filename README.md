@@ -34,7 +34,7 @@ main :: IO ()
 main = do
     let c1 = Coord 20 20
         c2 = Coord 30 30
-        (bearing, distance) = haversine @MILES c1 c2
+        (distance, bearing) = haversine @MILES c1 c2
     let c3 = reverseHaversine @MILES c1 distance bearing
     print (c2 ~== c3)
 
