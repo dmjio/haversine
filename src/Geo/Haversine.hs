@@ -28,12 +28,13 @@ module Geo.Haversine
   -- * Constants
   , earthRadiusMiles
   , earthRadiusKms
+  -- * Helpers
+  , deg2rad
+  , rad2deg
   )
 
 where
 
-import Data.AEq         ((~==), AEq)
-import Data.Proxy
 import Foreign          (Ptr, alloca, peek)
 import System.IO.Unsafe
 
@@ -64,3 +65,9 @@ foreign import ccall "haversine.h reverse_haversine"
 
 foreign import ccall "haversine.h bearing"
   c_bearing :: Double -> Double -> Double -> Double -> IO Double
+
+foreign import ccall "haversine.h deg2rad"
+  deg2rad :: Double -> Double
+
+foreign import ccall "haversine.h rad2deg"
+  rad2deg :: Double -> Double

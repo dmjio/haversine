@@ -20,8 +20,6 @@ module Geo.Haversine.Types
 
 import Data.AEq         ((~==), AEq)
 import Test.QuickCheck
-import Test.QuickCheck.Gen
-import Test.QuickCheck  (Arbitrary)
 
 data Coord = Coord { getLat, getLng :: Double }
   deriving stock (Show, Eq)
