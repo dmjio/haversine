@@ -1,3 +1,5 @@
-double haversine(double lat1, double lon1, double lat2, double lon2, double radius);
-void reverse_haversine(double lat1, double lon1, double brng, double dist, double *lat2, double *lon2, double radius);
-double bearing(double lat1, double lon1, double lat2, double lon2);
+double haversine(double, double, double, double, double);
+void reverse_haversine(double, double, double, double, double *, double *, double);
+double bearing(double, double, double, double);
+double rad2deg(double);
+double deg2rad(double);

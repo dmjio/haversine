@@ -53,10 +53,16 @@ extra-doc-files:    CHANGELOG.md
 
 library
     -- Modules exported by the library.
-    exposed-modules:  Geo.Haversine
+    exposed-modules:
+      Geo.Haversine
+      Geo.Haversine.Pure
 
     -- Modules included in this library but not exported.
-    -- other-modules:
+    other-modules:
+      Geo.Haversine.Types
+
+    ghc-options:
+      -Wall
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:

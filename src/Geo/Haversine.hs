@@ -20,6 +20,7 @@ module Geo.Haversine
   -- * API
   , haversine
   , reverseHaversine
+  , bearing
   -- * Raw API
   , c_haversine
   , c_reverse_haversine
@@ -35,59 +36,18 @@ import Data.AEq         ((~==), AEq)
 import Data.Proxy
 import Foreign          (Ptr, alloca, peek)
 import System.IO.Unsafe
-import Test.QuickCheck
-import Test.QuickCheck.Gen
-import Test.QuickCheck  (Arbitrary)
 
-earthRadiusMiles :: Double
-earthRadiusMiles = 3963.1906
-
-earthRadiusKms :: Double
-earthRadiusKms = 6378.137
-
-data Coord = Coord { getLat, getLng :: Double }
-  deriving stock (Show, Eq)
-
-instance Arbitrary Coord where
-  arbitrary = do
-    lat <- choose (-90, 90)
-    lng <- choose (-180, 180)
-    pure (Coord lat lng)
-
-instance AEq Coord where
-  Coord la1 ln1 ~== Coord la2 ln2 =
-    la1 ~== la2 && ln2 ~== ln2
-
-newtype Radius r = Radius { getRadius :: Double }
-  deriving (Show, Eq, Num, Fractional)
-
-newtype Bearing = Bearing Double
-  deriving (Show, Eq, Fractional, Num)
-
-newtype Distance = Distance { getDistance :: Double }
-  deriving (Show, Eq)
-
-data DistanceType = MILES | KILOMETRES
-  deriving (Eq, Show)
-
-class HasRadius (d :: DistanceType) where
-  radius :: Double
-
-instance HasRadius MILES where
-  radius = earthRadiusMiles
-
-instance HasRadius KILOMETRES where
-  radius = earthRadiusKms
+import Geo.Haversine.Types
 
 haversine :: forall r . HasRadius r => Coord -> Coord -> (Distance, Bearing)
 haversine c1@(Coord lat1 lng1) c2@(Coord lat2 lng2) = unsafePerformIO $ do
   b <- bearing c1 c2
   d <- Distance <$> c_haversine lat1 lng1 lat2 lng2 (radius @r)
   pure (d, b)
-  where
-    bearing :: Coord -> Coord -> IO Bearing
-    bearing (Coord lat1 lng1) (Coord lat2 lng2) =
-      Bearing <$> c_bearing lat1 lng1 lat2 lng2
+
+bearing :: Coord -> Coord -> IO Bearing
+bearing (Coord lat1 lng1) (Coord lat2 lng2) =
+  Bearing <$> c_bearing lat1 lng1 lat2 lng2
 
 reverseHaversine :: forall r . HasRadius r => Coord -> Distance -> Bearing -> Coord
 reverseHaversine (Coord lat1 lng1) (Distance d) (Bearing b) = unsafePerformIO $ do
