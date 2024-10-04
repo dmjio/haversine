@@ -48,7 +48,7 @@ newtype Bearing = Bearing Double
 
 instance Arbitrary Bearing where
   arbitrary = do
-    x <- choose (0, 359)
+    x <- choose (0, 359.9)
     pure (Bearing x)
 
 newtype Distance = Distance { getDistance :: Double }
